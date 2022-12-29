@@ -1,0 +1,55 @@
+@startuml
+    !define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+    !define foreign_key(x) <color:#aaaaaa><&key></color> x
+    !define column(x) <color:#efefef><&media-record></color> x
+    !define table(x) entity x << (T, white) >>
+
+    table( User ) {
+        primary_key( id ): INTEGER
+        column( userUniqueId ): UUID
+        column( firstName ): VARCHAR (30)
+        column( lastName ): VARCHAR (30)
+        column( enail ): VARCHAR (80)  
+    }
+
+    table( Team ) {
+        primary_key( id ): INTEGER
+        column( teamName ): VARCHAR (30)  
+    }
+
+    table( Ownership ) {
+        primary_key( id ): INTEGER
+        column( type ): VARCHAR (30)  
+        foreign_key( teamId ): INTEGER <<FK>>
+        foreign_key( userId ): INTEGER <<FK>>
+    }
+
+    table( DayOff ) {
+        primary_key( id ): INTEGER
+        column( day ): DATETIMEOFFSET
+        column( state ): TINYINT 
+        foreign_key( hollidayId ): INTEGER <<FK>>
+    }
+
+    table( Holliday ) {
+        primary_key( id ): INTEGER
+        column( approved ): TINYINT 
+        foreign_key( ownerShipId ): INTEGER <<FK>>
+    }
+
+    table( HollidayRequest ) {
+        primary_key( id ): INTEGER
+        column( requestDate ): DATETIMEOFFSET
+        column( status ): TINYINT 
+        foreign_key( ownershipId ): INTEGER <<FK>>
+    }
+
+
+    User }|--|| Ownership
+    Team }|--|| Ownership
+
+    HollidayRequest -- Holliday
+    DayOff }|--|| Holliday
+    Ownership }|--|| Holliday
+
+@enduml
